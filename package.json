@@ -1,0 +1,25 @@
+{
+  "name": "node2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andriusmw/node2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andriusmw/node2/issues"
+  },
+  "homepage": "https://github.com/andriusmw/node2#readme",
+  "dependencies": {
+    "chalk": "^5.0.1",
+    "minimist": "^1.2.6",
+    "sharp": "^0.30.5"
+  }
+}
