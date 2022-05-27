@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/andriusmw/node2#readme",
   "dependencies": {
-    "chalk": "^5.0.1",
+    "chalk": "^4.1.2",
     "minimist": "^1.2.6",
     "sharp": "^0.30.5"
   }
