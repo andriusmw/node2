@@ -7,6 +7,9 @@
 const chalk = require("chalk");
 const minimist = require("minimist");
 //requiere el modulo minimist y este chekea los argumentos con los que se llama al programa
+const path = require("path");
+const fs = require("fs/promises");
+//fs/promises lo mismo que fs pero tienes los métodos asyncronos
 
 const args = minimist(process.argv);
 console.log(args);
@@ -34,11 +37,17 @@ console.log(chalk.green("empezamos a procesar las imágenes"));
 const { watermark, resize, inputDir, outputDir } = args;
 //destructuring del objeto args para autocomplete y más comodidad al rescribir
 
-/************************************************************** */
+/***************************** FUNCIONALIDAD ********************************* */
 
 async function processImages({ inputDir, outputDir, watermark, resize }) {
   console.log(inputDir, outputDir, watermark, resize);
+  //crear rutas
+  console.log(__dirname); // __dirnamese refiere al directorio actual
+  const inputPath = path.resolve(__dirname, inputDir); //crea la ruta donde se va a crear el directorio, primer elemento, es la ruta actual y el segundo el nombre, en este caso, lo que le pasemos al argumento --inputDir
+  const outputPath = path.resolve(__dirname, outputDir);
+
   //comprobar que existe inputDir
+
   //Crear si no existe outputDIr
   //Comprobar si existe watermark
   //Leer contenidos de inputDir
