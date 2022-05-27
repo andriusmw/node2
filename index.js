@@ -15,6 +15,9 @@ const path = require("path");
 const fs = require("fs/promises");
 //fs/promises lo mismo que fs pero tienes los métodos asyncronos
 const { pathExists, createPathIfNotExists } = require("./helpers");
+const sharp = require("sharp");
+//modulo para procesar imagenes
+
 
 /**************************** PREPARATIVOS ************************/
 
@@ -92,19 +95,35 @@ async function processImages({ inputDir, outputDir, watermark, resize }) {
             //Devuelve TRUE si la extension del file pasada a minuscula está dentro
             //del array de extensiones válidas.
           });
-          console.log(imgFiles);
+          //console.log(imgFiles);
 
 
   // recorre toda la lista de archivos y:------------------------------
       //-si existe resize redimensionar
       //-si existe watermak poner marca de agua
       //-guardar la imagen resultante en outputdir
+
+           // **************RECORRER ARRAY IMGS**********
             for (const imgFile of imgFiles) {
               const imagePath = path.resolve(inputPath, imgFile);
-              console.log(imagePath);
+              //console.log(imagePath);
               //recorre el array de imágenes y para cada imagen crea una ruta
               //con la funcion inputhPath que tenemos de antes y de nombre de fichero el imgFile
-              
+              const image = sharp(imagePath);
+              //sharp lee el fichero para poder modificarlo
+
+              //si existe resize hacemos el resize----------------------
+              if(resize) {
+                image.resize(resize)
+                //La propiedad .resize redimensiona a los parámetros que pasamos. Píldora
+                //image en azul es la constante de una imagen procesada
+              }
+
+              //guardamos imagen--------------------------------------------------
+                await image.toFile(path.resolve(outputPath, "processed_" + imgFile))
+                //.toFile guarda lo de delante del punto en un archivo. 
+                // PÍLDORA 3 Y SIN PROTECTOR DE ESTÓMAGO...
+
             }
 
 
