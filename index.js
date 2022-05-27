@@ -69,12 +69,12 @@ async function processImages({ inputDir, outputDir, watermark, resize }) {
     await createPathIfNotExists(outputPath);
 
 
-    //Comprobar si existe watermark--------------------------------
+    //Comprobar si existe watermark-------------------------------------------
         if(watermarkPath) {
           await pathExists(watermarkPath)
         }
 
-    //Leer contenidos de inputDir----------------------------------
+    //Leer contenidos de inputDir---------------------------------------------
 
         const inputFiles = await fs.readdir(inputPath);
         //fs.readdir lee contenidos de la ruta que le pasamos
@@ -82,10 +82,34 @@ async function processImages({ inputDir, outputDir, watermark, resize }) {
 
 
 
-  //Quedarme solo con los archivos que sean imagenes
-  //si existe resize redimensionar
-  //si existe watermak poner marca de agua
-  //guardar la imagen resultante en outputdir
+  //Quedarme solo con los archivos que sean imagenes--------------------------
+          const imgFiles = inputFiles.filter(file => {
+            console.log(path.extname(file));
+            //muestra la extension del archivo
+            const validExt = [".jpg", ",jpeg", ".gif", ".png"]
+            //crea array de extensiones válidas.
+            return validExt.includes(path.extname(file).toLowerCase())
+            //Devuelve TRUE si la extension del file pasada a minuscula está dentro
+            //del array de extensiones válidas.
+          });
+          console.log(imgFiles);
+
+
+  // recorre toda la lista de archivos y:------------------------------
+      //-si existe resize redimensionar
+      //-si existe watermak poner marca de agua
+      //-guardar la imagen resultante en outputdir
+            for (const imgFile of imgFiles) {
+              const imagePath = path.resolve(inputPath, imgFile);
+              console.log(imagePath);
+              //recorre el array de imágenes y para cada imagen crea una ruta
+              //con la funcion inputhPath que tenemos de antes y de nombre de fichero el imgFile
+              
+            }
+
+
+
+
   } catch (error) {
         console.log(chalk.red(error.message));
         console.log(chalk.red("comprueba que los argumentos sean correctos"));
