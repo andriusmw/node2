@@ -1,4 +1,4 @@
-/****************** preparativos ************************/
+/*************************** IMPORTS  ************************* */
 
 //console.log(process.argv);
 //para ver los comandos que le introducimos al llamar el fichero index.js ->process.js
@@ -7,13 +7,16 @@
 const chalk = require("chalk");
 const minimist = require("minimist");
 //requiere el modulo minimist y este chekea los argumentos con los que se llama al programa
-const path = require("path");
-const fs = require("fs/promises");
-//fs/promises lo mismo que fs pero tienes los métodos asyncronos
-
 const args = minimist(process.argv);
 console.log(args);
 //Muestra lo mismo que la linea 3 pero mas bonito, lo mete en un objeto.
+
+const path = require("path");
+const fs = require("fs/promises");
+//fs/promises lo mismo que fs pero tienes los métodos asyncronos
+const { pathExists, createPathIfNotExists } = require("./helpers");
+
+/**************************** PREPARATIVOS ************************/
 
 if (!args.inputDir || !args.outputDir) {
   console.error(
@@ -45,6 +48,13 @@ async function processImages({ inputDir, outputDir, watermark, resize }) {
   console.log(__dirname); // __dirnamese refiere al directorio actual
   const inputPath = path.resolve(__dirname, inputDir); //crea la ruta donde se va a crear el directorio, primer elemento, es la ruta actual y el segundo el nombre, en este caso, lo que le pasemos al argumento --inputDir
   const outputPath = path.resolve(__dirname, outputDir);
+  try {
+    await pathExists(inputPath);
+    //llamo a la función pathExists del helpers.js que he importado
+    //pasando como parámetro el inputPath
+  } catch (error) {
+    console.log(chalk.red(error.message));
+  }
 
   //comprobar que existe inputDir
 
