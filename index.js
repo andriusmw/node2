@@ -1,4 +1,4 @@
-/*************************** IMPORTS  ************************* */
+/************************************************************** IMPORTS  ************************************************************************ */
 
 //console.log(process.argv);
 //para ver los comandos que le introducimos al llamar el fichero index.js ->process.js
@@ -19,7 +19,7 @@ const sharp = require("sharp");
 //modulo para procesar imagenes
 
 
-/**************************** PREPARATIVOS ************************/
+/************************************************************ PREPARATIVOS ***********************************************************************/
 
 if (!args.inputDir || !args.outputDir) {
   console.error(
@@ -43,13 +43,14 @@ console.log(chalk.green("empezamos a procesar las imágenes"));
 const { watermark, resize, inputDir, outputDir } = args;
 //destructuring del objeto args para autocomplete y más comodidad al rescribir
 
-/***************************** FUNCIONALIDAD ********************************* */
+/******************************************************* FUNCIONALIDAD ***************************************************************************** */
 
 async function processImages({ inputDir, outputDir, watermark, resize }) {
   console.log(inputDir, outputDir, watermark, resize);
   //crear rutas
   console.log(__dirname); // __dirnamese refiere al directorio actual
-  const inputPath = path.resolve(__dirname, inputDir); //crea la ruta donde se va a   crear el directorio, primer elemento, es la ruta actual y el segundo el nombre, en este caso, lo que le pasemos al argumento --inputDir
+  const inputPath = path.resolve(__dirname, inputDir); //crea la ruta donde se va a   crear el directorio,
+  // primer elemento, es la ruta actual y el segundo el nombre, en este caso, lo que le pasemos al argumento --inputDir
   const outputPath = path.resolve(__dirname, outputDir);
   let watermarkPath;
   if(watermark) {
@@ -62,22 +63,22 @@ async function processImages({ inputDir, outputDir, watermark, resize }) {
    *
    * */
   try {
-    //comprobar que existe inputDir------------------------------------------
+    //comprobar que existe inputDir----------------------------------------------------------------------------------------------------------
     await pathExists(inputPath);
          //llamo a la función pathExists del helpers.js que he importado
          //pasando como parámetro el inputPath
 
 
-    //Crear si no existe outputDIr---------------------------------------------
+    //Crear si no existe outputDIr--------------------------------------------------------------------------------------------------------
     await createPathIfNotExists(outputPath);
 
 
-    //Comprobar si existe watermark-------------------------------------------
+    //Comprobar si existe watermark-----------------------------------------------------------------------------------------------------
         if(watermarkPath) {
           await pathExists(watermarkPath)
         }
 
-    //Leer contenidos de inputDir---------------------------------------------
+    //Leer contenidos de inputDir---------------------------------------------------------------------------------------------------------
 
         const inputFiles = await fs.readdir(inputPath);
         //fs.readdir lee contenidos de la ruta que le pasamos
@@ -85,7 +86,7 @@ async function processImages({ inputDir, outputDir, watermark, resize }) {
 
 
 
-  //Quedarme solo con los archivos que sean imagenes--------------------------
+  //Quedarme solo con los archivos que sean imagenes--------------------------------------------------------------------------------------
           const imgFiles = inputFiles.filter(file => {
             console.log(path.extname(file));
             //muestra la extension del archivo
@@ -98,13 +99,14 @@ async function processImages({ inputDir, outputDir, watermark, resize }) {
           //console.log(imgFiles);
 
 
-  // recorre toda la lista de archivos y:------------------------------
+  // recorre toda la lista de archivos y:--------------------------------------------------------------------------------------
       //-si existe resize redimensionar
       //-si existe watermak poner marca de agua
       //-guardar la imagen resultante en outputdir
 
            // **************RECORRER ARRAY IMGS**********
             for (const imgFile of imgFiles) {
+              console.log(chalk.blue("Procesando imagen: " + imgFile))
               const imagePath = path.resolve(inputPath, imgFile);
               //console.log(imagePath);
               //recorre el array de imágenes y para cada imagen crea una ruta
@@ -112,22 +114,32 @@ async function processImages({ inputDir, outputDir, watermark, resize }) {
               const image = sharp(imagePath);
               //sharp lee el fichero para poder modificarlo
 
-              //si existe resize hacemos el resize----------------------
+              //si existe resize hacemos el resize-------------------------------------------------------------------------------
               if(resize) {
                 image.resize(resize)
                 //La propiedad .resize redimensiona a los parámetros que pasamos. Píldora
                 //image en azul es la constante de una imagen procesada
               }
 
-              //guardamos imagen--------------------------------------------------
+              //Si existe watermarkpath colocamos watermark-----------------------------------------------------------------------
+              if(watermarkPath) {
+                image.composite[{
+                  input: watermarkPath,
+                  top:20,
+                  left:20
+                }]
+              }
+              //si hubiera un archivo que le pasásemos a la instrucion --watermark, osea en la raiz del proyecto solo indicando su nombre
+              //por ejemplo imagenmarca.png ya funcionaria todo el código y pondria esa imagen , como marca de agua encima de cada imagen
+              //en esas posiciones. 
+
+              //guardamos imagen-----------------------------------------------------------------------------------------------
                 await image.toFile(path.resolve(outputPath, "processed_" + imgFile))
                 //.toFile guarda lo de delante del punto en un archivo. 
                 // PÍLDORA 3 Y SIN PROTECTOR DE ESTÓMAGO...
+                console.log(chalk.green("imagen: " + imgFile + " guardada"))
 
             }
-
-
-
 
   } catch (error) {
         console.log(chalk.red(error.message));
