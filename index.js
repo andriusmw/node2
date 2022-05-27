@@ -46,25 +46,52 @@ async function processImages({ inputDir, outputDir, watermark, resize }) {
   console.log(inputDir, outputDir, watermark, resize);
   //crear rutas
   console.log(__dirname); // __dirnamese refiere al directorio actual
-  const inputPath = path.resolve(__dirname, inputDir); //crea la ruta donde se va a crear el directorio, primer elemento, es la ruta actual y el segundo el nombre, en este caso, lo que le pasemos al argumento --inputDir
+  const inputPath = path.resolve(__dirname, inputDir); //crea la ruta donde se va a   crear el directorio, primer elemento, es la ruta actual y el segundo el nombre, en este caso, lo que le pasemos al argumento --inputDir
   const outputPath = path.resolve(__dirname, outputDir);
-  try {
-    await pathExists(inputPath);
-    //llamo a la función pathExists del helpers.js que he importado
-    //pasando como parámetro el inputPath
-  } catch (error) {
-    console.log(chalk.red(error.message));
+  let watermarkPath;
+  if(watermark) {
+    watermarkPath = path.resolve(__dirname,watermark);
   }
+  //Comprueba si existe una watermark y entonces le crea
+  //la ruta a la variable watermarkPath
+  /*
+   *
+   *
+   * */
+  try {
+    //comprobar que existe inputDir------------------------------------------
+    await pathExists(inputPath);
+         //llamo a la función pathExists del helpers.js que he importado
+         //pasando como parámetro el inputPath
 
-  //comprobar que existe inputDir
 
-  //Crear si no existe outputDIr
-  //Comprobar si existe watermark
-  //Leer contenidos de inputDir
+    //Crear si no existe outputDIr---------------------------------------------
+    await createPathIfNotExists(outputPath);
+
+
+    //Comprobar si existe watermark--------------------------------
+        if(watermarkPath) {
+          await pathExists(watermarkPath)
+        }
+
+    //Leer contenidos de inputDir----------------------------------
+
+        const inputFiles = await fs.readdir(inputPath);
+        //fs.readdir lee contenidos de la ruta que le pasamos
+        console.log(inputFiles);
+
+
+
   //Quedarme solo con los archivos que sean imagenes
   //si existe resize redimensionar
   //si existe watermak poner marca de agua
   //guardar la imagen resultante en outputdir
+  } catch (error) {
+        console.log(chalk.red(error.message));
+        console.log(chalk.red("comprueba que los argumentos sean correctos"));
+  }
+
+  
 }
 
 processImages({ inputDir, outputDir, watermark, resize });
